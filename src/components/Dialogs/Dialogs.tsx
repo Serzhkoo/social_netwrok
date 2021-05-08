@@ -1,22 +1,21 @@
 import React, {ChangeEvent} from "react";
-import {DialogsType} from "../../redux/state";
+import {ActionType, AddMessageActionCreator, DialogsType, UpdateNewMessageActionCreator} from "../../redux/state";
 import {DialogItem} from "./DialogItem/DialogItem";
 import s from "./Dialogs.module.css"
 import {Message} from "./Message/Message";
 
 type DialogsPropsType = {
     state: DialogsType
-    addMessage: () => void
-    updateNewMessageText: (newMessageText: string) => void
+    dispatch: (action: ActionType) => void
 }
 
 export function Dialogs(props: DialogsPropsType) {
 
     let addMessage = () => {
-        props.addMessage()
+        props.dispatch(AddMessageActionCreator())
     }
 
-    let onMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => {props.updateNewMessageText(e.currentTarget.value)}
+    let onMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => {props.dispatch(UpdateNewMessageActionCreator(e.currentTarget.value))}
 
     return (
         <div className={s.dialogs}>
@@ -26,7 +25,7 @@ export function Dialogs(props: DialogsPropsType) {
             <div>
                 <div>
                     <textarea onChange={onMessageChange}
-                              value={props.state.newMessageText}></textarea>
+                              value={props.state.newMessageText}/>
                 </div>
                 <div>
                     <button onClick={addMessage}>Add message</button>

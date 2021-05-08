@@ -1,13 +1,12 @@
 import s from "./MyPosts.module.css";
 import React, {ChangeEvent} from "react";
 import {Post} from "./Post/Post";
-import {PostsDataType} from "../../../redux/state";
+import {ActionType, AddPostActionCreator, PostsDataType, UpdateNewPostActionCreator} from "../../../redux/state";
 
 type MyPostsPropsType = {
     postsData: Array<PostsDataType>
-    addPost: () => void
     newPostText: string
-    updateNewPostText: (postMessage: string) => void
+    dispatch: (action: ActionType) => void
 }
 
 export function MyPosts(props: MyPostsPropsType) {
@@ -15,10 +14,13 @@ export function MyPosts(props: MyPostsPropsType) {
     let postsElements = props.postsData.map(t => <Post key={t.id} message={t.message} likeCount={t.likeCount}/>);
 
     let addPost = () => {
-            props.addPost();
+        debugger
+        props.dispatch(AddPostActionCreator());
     }
 
-    let onPostChange = (e: ChangeEvent<HTMLTextAreaElement>) => {props.updateNewPostText(e.currentTarget.value)}
+    let onPostChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        props.dispatch(UpdateNewPostActionCreator(e.currentTarget.value))
+    }
 
     return (
         <div className={s.postsBlock}>
