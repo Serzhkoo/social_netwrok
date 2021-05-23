@@ -1,37 +1,38 @@
 import React, {ChangeEvent} from "react";
-import {ActionType, AddMessageActionCreator, DialogsType, UpdateNewMessageActionCreator} from "../../redux/state";
 import {DialogItem} from "./DialogItem/DialogItem";
 import s from "./Dialogs.module.css"
 import {Message} from "./Message/Message";
+import {DialogsType} from "../../redux/dialogs-reducer";
 
 type DialogsPropsType = {
-    state: DialogsType
-    dispatch: (action: ActionType) => void
+    sendMessage: () => void
+    onNewMessageChange: (value: string) => void
+    dialogsPage: DialogsType
 }
 
 export function Dialogs(props: DialogsPropsType) {
 
-    let addMessage = () => {
-        props.dispatch(AddMessageActionCreator())
-    }
+    let sendMessage = () => {
+        props.sendMessage()
+    };
 
-    let onMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => {props.dispatch(UpdateNewMessageActionCreator(e.currentTarget.value))}
+    let onNewMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => {props.onNewMessageChange(e.currentTarget.value)};
 
     return (
         <div className={s.dialogs}>
             <div className={s.dialogItems}>
-                {props.state.dialogsData.map(t => <DialogItem state={t}/>)}
+                {props.dialogsPage.dialogsData.map(t => <DialogItem key={t.id} state={t}/>)}
             </div>
             <div>
                 <div>
-                    <textarea onChange={onMessageChange}
-                              value={props.state.newMessageText}/>
+                    <textarea onChange={onNewMessageChange}
+                              value={props.dialogsPage.newMessageText}/>
                 </div>
                 <div>
-                    <button onClick={addMessage}>Add message</button>
+                    <button onClick={sendMessage}>Add message</button>
                 </div>
                 <div className={s.messages}>
-                    {props.state.messagesData.map(t => <Message message={t.message}/>)}
+                    {props.dialogsPage.messagesData.map(t => <Message key={t.id} message={t.message}/>)}
                 </div>
             </div>
         </div>

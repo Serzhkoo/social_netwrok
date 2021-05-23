@@ -1,46 +1,45 @@
-export type DialogsDataType = {
+import {AddPostAC, profileReducer, UpdateNewPostAC} from "./profile-reducer";
+import {AddMessageAC, dialogsReducer, UpdateNewMessageAC} from "./dialogs-reducer";
+
+type DialogsDataType = {
     id: number
     name: string
     picture: string
 }
-export type MessagesDataType = {
+type MessagesDataType = {
     id: number
     message: string
 }
-export type PostsDataType = {
+type PostsDataType = {
     id: number
     message: string
     likeCount: number
 }
-export type DialogsType = {
+type DialogsType = {
     dialogsData: Array<DialogsDataType>
     messagesData: Array<MessagesDataType>
     newMessageText: string
 }
-export type ProfileType = {
+type ProfileType = {
     postsData: Array<PostsDataType>
     newPostText: string
 }
-export type StateType = {
+type StateType = {
     dialogsPage: DialogsType
     profilePage: ProfileType
 }
 
-export type ActionType = ReturnType<typeof AddPostActionCreator> | ReturnType<typeof UpdateNewMessageActionCreator> | ReturnType<typeof AddMessageActionCreator> | ReturnType<typeof UpdateNewPostActionCreator>;
+type ActionType = ReturnType<typeof AddPostAC> | ReturnType<typeof UpdateNewPostAC> | ReturnType<typeof AddMessageAC> | ReturnType<typeof UpdateNewMessageAC>;
 
-export type StoreType = {
+type StoreType = {
     _state: StateType
     getState: () => StateType
     _onChange: () => void
     subscribe: (callback: () => void) => void
-    _addPost: () => void
-    _updateNewMessageText: (newText: string) => void
-    _addMessage: () => void
-    _updateNewPostText: (newText: string) => void
     dispatch: (action: ActionType) => void
 }
 
-export const store: StoreType = {
+const store: StoreType = {
     _state: {
         dialogsPage: {
             dialogsData: [
@@ -104,60 +103,12 @@ export const store: StoreType = {
     subscribe(callback) {
         this._onChange = callback;
     },
-    _addPost() {
-        let newPost = {
-            id: 5,
-            message: this._state.profilePage.newPostText,
-            likeCount: 0
-        };
-        this._state.profilePage.postsData.push(newPost);
-        this._state.profilePage.newPostText = '';
-        this._onChange();
-    },
-    _updateNewMessageText(newText) {
-        this._state.dialogsPage.newMessageText = newText;
-        this._onChange();
-    },
-    _addMessage() {
-        let newMessage = {
-            id: 7,
-            message: this._state.dialogsPage.newMessageText
-        };
-        this._state.dialogsPage.messagesData.push(newMessage);
-        this._state.dialogsPage.newMessageText = '';
-        this._onChange();
-    },
-    _updateNewPostText(newText) {
-        this._state.profilePage.newPostText = newText;
-        this._onChange();
-    },
     dispatch(action) {
-        switch (action.type) {
-            case 'ADD-POST':
-                this._addPost();
-                break;
-            case 'UPDATE-NEW-MESSAGE-TEXT':
-                this._updateNewMessageText(action.newText);
-                break;
-            case 'ADD-MESSAGE':
-                this._addMessage();
-                break;
-            case 'UPDATE-NEW-POST-TEXT':
-                this._updateNewPostText(action.newText);
-                break;
-        }
+
+        this._state.dialogsPage = dialogsReducer(this._state.dialogsPage, action)
+        this._state.profilePage = profileReducer(this._state.profilePage, action)
+
+        this._onChange()
     }
 }
 
-export const AddPostActionCreator = () => {
-    return {type: 'ADD-POST'} as const
-}
-export const UpdateNewMessageActionCreator = (text: string) => {
-    return {type: 'UPDATE-NEW-MESSAGE-TEXT', newText: text} as const
-}
-export const AddMessageActionCreator = () => {
-    return {type: 'ADD-MESSAGE'} as const
-}
-export const UpdateNewPostActionCreator = (text: string) => {
-    return {type: 'UPDATE-NEW-POST-TEXT', newText: text} as const
-}
