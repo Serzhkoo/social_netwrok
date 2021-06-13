@@ -1,9 +1,9 @@
 import React from "react";
 
-export function News() {
+export const Login = () => {
     return (
         <div>
-            News
+            LOGIN
         </div>
     )
 }

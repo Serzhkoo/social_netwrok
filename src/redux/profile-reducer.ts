@@ -1,13 +1,38 @@
 import {ActionType} from "./redux-store";
+import {Dispatch} from "react";
+import {profileAPI} from "../api/api";
 
 type PostsDataType = {
     id: number
     message: string
     likeCount: number
 };
+
+export type UserProfileType = {
+    userId: number
+    lookingForAJob: boolean
+    lookingForAJobDescription: string
+    fullName: string
+    contacts: {
+        github: string
+        vk: string
+        facebook: string
+        instagram: string
+        twitter: string
+        website: string
+        youtube: string
+        mainLink: string
+    }
+    photos: {
+        small: string
+        large: string
+    }
+}
+
 export type ProfileType = {
     postsData: Array<PostsDataType>
     newPostText: string
+    profile: UserProfileType
 };
 
 const initialState: ProfileType = {
@@ -17,7 +42,27 @@ const initialState: ProfileType = {
         {id: 3, message: 'Oops', likeCount: 30},
         {id: 4, message: 'Blablabla', likeCount: 1}
     ],
-    newPostText: ''
+    newPostText: '',
+    profile: {
+        userId: 0,
+        lookingForAJob: false,
+        lookingForAJobDescription: '',
+        fullName: '',
+        contacts: {
+            github: '',
+            vk: '',
+            facebook: '',
+            instagram: '',
+            twitter: '',
+            website: '',
+            youtube: '',
+            mainLink: ''
+        },
+        photos: {
+            small: '',
+            large: ''
+        }
+    }
 };
 
 export const profileReducer = (state: ProfileType = initialState, action: ActionType): ProfileType => {
@@ -38,13 +83,30 @@ export const profileReducer = (state: ProfileType = initialState, action: Action
                 ...state,
                 newPostText: action.newText
             };
+        case 'SET-USER-PROFILE':
+            return {
+                ...state,
+                profile: action.profile
+            };
         default:
             return state;
     }
 };
-export const AddPostAC = () => {
+export const addPost = () => {
     return {type: 'ADD-POST'} as const
 }
-export const UpdateNewPostAC = (text: string) => {
-    return {type: 'UPDATE-NEW-POST-TEXT', newText: text} as const
+export const updateNewPost = (newText: string) => {
+    return {type: 'UPDATE-NEW-POST-TEXT', newText} as const
+}
+export const setUserProfile = (profile: UserProfileType) => {
+    return {type: 'SET-USER-PROFILE', profile} as const
+}
+
+export const getUserProfile = (userId: string) => {
+    return (dispatch: Dispatch<ActionType>) => {
+        profileAPI.getProfile(userId)
+            .then(response => {
+                dispatch(setUserProfile(response.data));
+            });
+    }
 }

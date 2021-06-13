@@ -74,15 +74,15 @@ export const dialogsReducer = (state: DialogsType = initialState, action: Action
         case 'UPDATE-NEW-MESSAGE-TEXT':
             return {
                 ...state,
-                newMessageText: action.newText
+                newMessageText: action.text
             };
         default:
             return state;
     }
 };
-export const AddMessageAC = () => {
+export const AddMessage = () => {
     return {type: 'ADD-MESSAGE'} as const
 }
-export const UpdateNewMessageAC = (text: string) => {
-    return {type: 'UPDATE-NEW-MESSAGE-TEXT', newText: text} as const
+export const UpdateNewMessage = (text: string) => {
+    return {type: 'UPDATE-NEW-MESSAGE-TEXT', text} as const
 }

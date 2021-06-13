@@ -1,24 +1,41 @@
-import {createStore, combineReducers} from "redux"
-import {AddPostAC, profileReducer, UpdateNewPostAC} from "./profile-reducer";
-import {AddMessageAC, dialogsReducer, UpdateNewMessageAC} from "./dialogs-reducer";
-import {FollowAC, SetUsersAC, UnFollowAC, usersReducer} from "./users-reducer";
+import {createStore, combineReducers, applyMiddleware} from "redux"
+import {addPost, profileReducer, setUserProfile, updateNewPost} from "./profile-reducer";
+import {AddMessage, dialogsReducer, UpdateNewMessage} from "./dialogs-reducer";
+import {
+    followSuccess,
+    setCurrentPage,
+    setTotalUsersCount,
+    setUsers,
+    toggleIsFetching, toggleIsFollowingInProgress,
+    unFollowSuccess,
+    usersReducer
+} from "./users-reducer";
+import {authReducer, setAuthUserData} from "./auth-reducer";
+import thunkMiddleware from "redux-thunk";
 
 export type ActionType =
-    ReturnType<typeof AddPostAC>
-    | ReturnType<typeof UpdateNewPostAC>
-    | ReturnType<typeof AddMessageAC>
-    | ReturnType<typeof UpdateNewMessageAC>
-    | ReturnType<typeof FollowAC>
-    | ReturnType<typeof UnFollowAC>
-    | ReturnType<typeof SetUsersAC>
+    ReturnType<typeof addPost>
+    | ReturnType<typeof updateNewPost>
+    | ReturnType<typeof AddMessage>
+    | ReturnType<typeof UpdateNewMessage>
+    | ReturnType<typeof followSuccess>
+    | ReturnType<typeof unFollowSuccess>
+    | ReturnType<typeof setUsers>
+    | ReturnType<typeof setCurrentPage>
+    | ReturnType<typeof setTotalUsersCount>
+    | ReturnType<typeof toggleIsFetching>
+    | ReturnType<typeof setUserProfile>
+    | ReturnType<typeof setAuthUserData>
+    | ReturnType<typeof toggleIsFollowingInProgress>
 
 const rootReducer = combineReducers({
     profilePage: profileReducer,
     dialogsPage: dialogsReducer,
-    usersPage: usersReducer
+    usersPage: usersReducer,
+    auth: authReducer
 })
 
-export const store = createStore(rootReducer);
+export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
 
 // @ts-ignore
 window.store = store;

@@ -1,5 +1,5 @@
-import {AddPostAC, profileReducer, UpdateNewPostAC} from "./profile-reducer";
-import {AddMessageAC, dialogsReducer, UpdateNewMessageAC} from "./dialogs-reducer";
+import {addPost, updateNewPost} from "./profile-reducer";
+import {AddMessage, dialogsReducer, UpdateNewMessage} from "./dialogs-reducer";
 
 type DialogsDataType = {
     id: number
@@ -29,7 +29,7 @@ type StateType = {
     profilePage: ProfileType
 }
 
-type ActionType = ReturnType<typeof AddPostAC> | ReturnType<typeof UpdateNewPostAC> | ReturnType<typeof AddMessageAC> | ReturnType<typeof UpdateNewMessageAC>;
+type ActionType = ReturnType<typeof addPost> | ReturnType<typeof updateNewPost> | ReturnType<typeof AddMessage> | ReturnType<typeof UpdateNewMessage>;
 
 type StoreType = {
     _state: StateType
@@ -106,7 +106,7 @@ const store: StoreType = {
     dispatch(action) {
 
         this._state.dialogsPage = dialogsReducer(this._state.dialogsPage, action)
-        this._state.profilePage = profileReducer(this._state.profilePage, action)
+        /*this._state.profilePage = profileReducer(this._state.profilePage, action)*/
 
         this._onChange()
     }
