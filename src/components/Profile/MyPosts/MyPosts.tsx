@@ -1,41 +1,31 @@
-import s from "./MyPosts.module.css";
-import React, {ChangeEvent} from "react";
-import {Post} from "./Post/Post";
-import {ProfileType} from "../../../redux/profile-reducer";
+import s from './MyPosts.module.css';
+import React from 'react';
+import { Post } from './Post/Post';
+import { ProfileType } from '../../../redux/profile-reducer';
+import { AddPostFormPropsType, AddPostReduxForm } from './AddNewPostForm/AddNewPostForm';
 
 type MyPostsPropsType = {
-    onNewPostChange: (value: string) => void
-    addPost: () => void
-    profilePage: ProfileType
+  addPost: (newPostBody: string) => void
+  profilePage: ProfileType
 }
 
 export function MyPosts(props: MyPostsPropsType) {
 
-    const postsElements = props.profilePage.postsData.map(t => <Post key={t.id} message={t.message} likeCount={t.likeCount}/>);
+  const postsElements = props.profilePage.postsData.map(t => <Post key={t.id} message={t.message}
+                                                                   likeCount={t.likeCount}/>);
 
-    const addPost = () => {
-        props.addPost();
-    }
+  const addPost = (formData: AddPostFormPropsType) => {
+    props.addPost(formData.newPostBody);
+  };
 
-    const onNewPostChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        props.onNewPostChange(e.currentTarget.value)
-    }
-
-    return (
-        <div className={s.postsBlock}>
-            <h3>My posts</h3>
-            <div>
-                <div>
-                    <textarea onChange={onNewPostChange}
-                              value={props.profilePage.newPostText}/>
-                </div>
-                <div>
-                    <button onClick={addPost}>Add post</button>
-                </div>
-            </div>
-            <div className={s.posts}>
-                {postsElements}
-            </div>
-        </div>
-    )
+  return (
+    <div className={s.postsBlock}>
+      <h3>My posts</h3>
+      <AddPostReduxForm onSubmit={addPost}/>
+      <div className={s.posts}>
+        {postsElements}
+      </div>
+    </div>
+  );
 }
+
