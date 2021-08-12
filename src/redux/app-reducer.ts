@@ -28,13 +28,7 @@ const setIsInitializedAC = (): SetIsInitializedActionType => {
   return { type: 'SET-IS-INITIALIZED' } as const;
 };
 
-export const initializeApp = () => {
-  return (dispatch: Dispatch<AppReducerActionsType | GetAuthType>) => {
-    async function initialisation() {
-      await dispatch(getAuth());
-      await dispatch(setIsInitializedAC());
-    }
-
-    initialisation();
-  };
+export const initializeApp = () => async (dispatch: Dispatch<AppReducerActionsType | GetAuthType>) => {
+  await dispatch(getAuth());
+  await dispatch(setIsInitializedAC());
 };

@@ -1,11 +1,11 @@
-import { addPost, ProfileType } from '../../../redux/profile-reducer';
+import { addPost, PostsDataType } from '../../../redux/profile-reducer';
 import { Dispatch } from 'redux';
 import { MyPosts } from './MyPosts';
 import { connect } from 'react-redux';
 import { StateType } from '../../../redux/redux-store';
 
 type MapStateToPropsType = {
-  profilePage: ProfileType
+  postsData: PostsDataType[]
 }
 type MapDispatchToPropsType = {
   addPost: (newPostBody: string) => void
@@ -13,7 +13,7 @@ type MapDispatchToPropsType = {
 
 const mapStateToProps = (state: StateType): MapStateToPropsType => {
   return {
-    profilePage: state.profilePage
+    postsData: state.profilePage.postsData
   };
 };
 const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToPropsType => {

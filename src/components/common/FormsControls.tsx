@@ -1,5 +1,5 @@
 import React from 'react';
-import { WrappedFieldMetaProps, WrappedFieldProps } from 'redux-form';
+import { Field, WrappedFieldMetaProps, WrappedFieldProps } from 'redux-form';
 import styles from './FormsControls.module.css';
 
 type FormControlPropsType = {
@@ -33,6 +33,23 @@ export const Input: React.FC<WrappedFieldProps> = (props) => {
     <FormControl {...props}><input {...input} {...restProps}/></FormControl>
   );
 };
+
+type ValidatorsType = Array<(value: string) => string | undefined>
+type PropsType = {
+  type?: string
+  value?: string
+}
+
+export const createField = (component: React.FC<WrappedFieldProps> | string, name: string, placeholder?: string, validators?: ValidatorsType, props?: PropsType, text?: string) => (
+  <div>
+    <Field
+      component={component}
+      placeholder={placeholder}
+      name={name}
+      validate={validators}
+      {...props}/> {text}
+  </div>
+);
 
 // export const Textarea: React.FC<WrappedFieldProps> = ({
 //                                                         input,

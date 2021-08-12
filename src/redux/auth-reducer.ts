@@ -45,42 +45,30 @@ export const setAuthUserData = (data: AuthDataType, isAuth: boolean): SetAuthUse
   return { type: 'SET-AUTH-USER-DATA', data, isAuth } as const;
 };
 
-export const getAuth = () => {
-  return (dispatch: Dispatch<AuthActionsType>) => {
-    return authAPI.getAuth()
-      .then(data => {
-        if (!data.resultCode) {
-          dispatch(setAuthUserData(data.data, true));
-        }
-      });
-  };
+export const getAuth = () => async (dispatch: Dispatch<AuthActionsType>) => {
+  const data = await authAPI.getAuth();
+  if (!data.resultCode) {
+    dispatch(setAuthUserData(data.data, true));
+  }
 };
 
-export const login = (email: string, password: string, rememberMe: boolean = false) => {
-  return (dispatch: Dispatch<AuthActionsType | GetAuthType | FormAction>) => {
-    authAPI.login({ email, password, rememberMe })
-      .then(data => {
-        if (!data.resultCode) {
-          dispatch(getAuth());
-        } else {
-          const message = data.messages.length ? data.messages[0] : 'Some error';
-          dispatch(stopSubmit('login', { _error: message }));
-        }
-      });
-  };
+export const login = (email: string, password: string, rememberMe: boolean = false) => async (dispatch: Dispatch<AuthActionsType | GetAuthType | FormAction>) => {
+  const data = await authAPI.login({ email, password, rememberMe });
+  if (!data.resultCode) {
+    dispatch(getAuth());
+  } else {
+    const message = data.messages.length ? data.messages[0] : 'Some error';
+    dispatch(stopSubmit('login', { _error: message }));
+  }
 };
 
-export const logout = () => {
-  return (dispatch: Dispatch<AuthActionsType>) => {
-    authAPI.logout()
-      .then(data => {
-        if (!data.resultCode) {
-          dispatch(setAuthUserData({
-            id: null,
-            email: null,
-            login: null
-          }, false));
-        }
-      });
-  };
+export const logout = () => async (dispatch: Dispatch<AuthActionsType>) => {
+  const data = await authAPI.logout();
+  if (!data.resultCode) {
+    dispatch(setAuthUserData({
+      id: null,
+      email: null,
+      login: null
+    }, false));
+  }
 };

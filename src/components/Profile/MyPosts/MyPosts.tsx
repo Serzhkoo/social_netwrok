@@ -1,17 +1,17 @@
 import s from './MyPosts.module.css';
 import React from 'react';
 import { Post } from './Post/Post';
-import { ProfileType } from '../../../redux/profile-reducer';
+import { PostsDataType } from '../../../redux/profile-reducer';
 import { AddPostFormPropsType, AddPostReduxForm } from './AddNewPostForm/AddNewPostForm';
 
 type MyPostsPropsType = {
   addPost: (newPostBody: string) => void
-  profilePage: ProfileType
+  postsData: PostsDataType[]
 }
 
-export function MyPosts(props: MyPostsPropsType) {
+export const MyPosts = React.memo((props: MyPostsPropsType) => {
 
-  const postsElements = props.profilePage.postsData.map(t => <Post key={t.id} message={t.message}
+  const postsElements = props.postsData.map(t => <Post key={t.id} message={t.message}
                                                                    likeCount={t.likeCount}/>);
 
   const addPost = (formData: AddPostFormPropsType) => {
@@ -27,5 +27,5 @@ export function MyPosts(props: MyPostsPropsType) {
       </div>
     </div>
   );
-}
+});
 

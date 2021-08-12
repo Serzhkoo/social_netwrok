@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import { profileAPI } from '../api/api';
 
-type PostsDataType = {
+export type PostsDataType = {
   id: number
   message: string
   likeCount: number
@@ -118,29 +118,19 @@ export const setUserStatus = (status: string): SetUserStatusActionType => {
   return { type: 'SET-USER-STATUS', status } as const;
 };
 
-export const getUserProfile = (userId: string) => {
-  return (dispatch: Dispatch<ProfileActionsType>) => {
-    profileAPI.getProfile(userId)
-      .then(response => {
-        dispatch(setUserProfile(response.data));
-      });
-  };
+export const getUserProfile = (userId: string) => async (dispatch: Dispatch<ProfileActionsType>) => {
+  const response = await profileAPI.getProfile(userId);
+  dispatch(setUserProfile(response.data));
 };
-export const getUserStatus = (userId: string) => {
-  return (dispatch: Dispatch<ProfileActionsType>) => {
-    profileAPI.getStatus(userId)
-      .then(response => {
-        dispatch(setUserStatus(response.data));
-      });
-  };
+
+export const getUserStatus = (userId: string) => async (dispatch: Dispatch<ProfileActionsType>) => {
+  const response = await profileAPI.getStatus(userId);
+  dispatch(setUserStatus(response.data));
 };
-export const updateUserStatus = (status: string) => {
-  return (dispatch: Dispatch<ProfileActionsType>) => {
-    profileAPI.updateStatus(status)
-      .then(response => {
-        if (response.data.resultCode === 0) {
-          dispatch(setUserStatus(status));
-        }
-      });
-  };
+
+export const updateUserStatus = (status: string) => async (dispatch: Dispatch<ProfileActionsType>) => {
+  const response = await profileAPI.updateStatus(status);
+  if (response.data.resultCode === 0) {
+    dispatch(setUserStatus(status));
+  }
 };

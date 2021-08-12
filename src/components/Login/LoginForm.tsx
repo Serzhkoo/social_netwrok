@@ -1,6 +1,6 @@
 import React from 'react';
-import { reduxForm, Field, InjectedFormProps } from 'redux-form';
-import { Input } from '../common/FormsControls';
+import { InjectedFormProps, reduxForm } from 'redux-form';
+import { createField, Input } from '../common/FormsControls';
 import { maxLengthCreator, requiredField } from '../../helpers/validators/validators';
 import styles from './../common/FormsControls.module.css';
 
@@ -12,21 +12,24 @@ export type FormDataType = {
 
 const maxLength = maxLengthCreator(50);
 
-export const LoginForm = (props: InjectedFormProps<FormDataType>) => {
-  const summaryError = props.error;
+export const LoginForm: React.FC<InjectedFormProps<FormDataType>> = ({ handleSubmit, error }) => {
+  const summaryError = error;
   const formClassName = `${styles.formSummary} ${summaryError ? styles.formSummaryError : ''}`;
 
   return (
-    <form onSubmit={props.handleSubmit} className={formClassName}>
-      <div>
+    <form onSubmit={handleSubmit} className={formClassName}>
+      {createField(Input, 'email', 'Email', [requiredField, maxLength])}
+      {createField(Input, 'password', 'Password', [requiredField, maxLength], { type: 'password' })}
+      {createField('input', 'rememberMe', undefined, undefined, { type: 'checkbox' }, 'remember me')}
+      {/*<div>
         <Field
           component={Input}
           placeholder={'Email'}
           name={'email'}
           validate={[requiredField, maxLength]}
         />
-      </div>
-      <div>
+      </div>*/}
+      {/*<div>
         <Field
           component={Input}
           type={'password'}
@@ -34,13 +37,13 @@ export const LoginForm = (props: InjectedFormProps<FormDataType>) => {
           name={'password'}
           validate={[requiredField, maxLength]}
         />
-      </div>
-      <div>
+      </div>*/}
+      {/*<div>
         <Field
           component={'input'}
           type={'checkbox'}
           name={'rememberMe'}/> remember me
-      </div>
+      </div>*/}
       <div style={{ height: '20px', color: 'red' }}>
         {summaryError}
       </div>

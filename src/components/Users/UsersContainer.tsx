@@ -37,25 +37,28 @@ type UsersContainerPropsType = MapStateToPropsType & {
 class UsersContainer extends React.Component<UsersContainerPropsType> {
 
   componentDidMount(): void {
-    this.props.requestUsers(this.props.currentPage, this.props.pageSize);
+    const { currentPage, pageSize } = this.props;
+    this.props.requestUsers(currentPage, pageSize);
   }
 
   onPageChanged = (pageNumber: number) => {
-    this.props.requestUsers(pageNumber, this.props.pageSize);
+    const { pageSize } = this.props;
+    this.props.requestUsers(pageNumber, pageSize);
   };
 
   render() {
+    const { followingInProgressUsers, follow, unFollow, users, currentPage, pageSize, totalUsersCount, isFetching } = this.props;
     return (
       <>
-        {this.props.isFetching ? <Preloader/> : null}
-        <Users totalUsersCount={this.props.totalUsersCount}
-               pageSize={this.props.pageSize}
+        {isFetching ? <Preloader/> : null}
+        <Users totalUsersCount={totalUsersCount}
+               pageSize={pageSize}
                onPageChanged={this.onPageChanged}
-               currentPage={this.props.currentPage}
-               users={this.props.users}
-               unFollow={this.props.unFollow}
-               follow={this.props.follow}
-               followingInProgressUsers={this.props.followingInProgressUsers}
+               currentPage={currentPage}
+               users={users}
+               unFollow={unFollow}
+               follow={follow}
+               followingInProgressUsers={followingInProgressUsers}
         />
       </>
     );
